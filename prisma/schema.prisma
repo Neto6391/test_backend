@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id  Int @default(autoincrement()) @id
-  login String
+  login String @unique
   senha String
   isDeleted Boolean @default(false)
   project Project?
