@@ -15,6 +15,8 @@ Objetivo:
 - Usuários convidados leitura so podem visualizar os documentos do projeto;
 - Todas as exclusões devem ser feitas com softdelete.
 
+Link da colecao de endpoints a serem importados no [Postman](https://github.com/Neto6391/test_backend/tree/main/postman_collection):
+
 ## Instalacao
 
 ```bash
