@@ -30,13 +30,13 @@ Link da colecao de endpoints a serem importados no [Postman](https://github.com/
 $ yarn install
 
 # Requer docker instalado(criar container do banco de dados MySQL)
-docker run -p 3306:3306 --name mysql-db -e MYSQL_ROOT_PASSWORD=123 -e MYSQL_DATABASE=test_backend -d mysql:8.0
+$ docker run -p 3306:3306 --name mysql-db -e MYSQL_ROOT_PASSWORD=123 -e MYSQL_DATABASE=test_backend -d mysql:8.0
 
 # caso queira navegar dentro do container do banco de dados
-docker exec -it mysql-db /bin/bash
+$ docker exec -it mysql-db /bin/bash
 
 # dentro do container executar para executar o servico do MySQL
- mysql -u root -p
+$ mysql -u root -p
  
  # senha para entrar no MySQL
  123
@@ -45,7 +45,7 @@ docker exec -it mysql-db /bin/bash
 renomear o arquivo '.example.env' para '.env'
 
 # cadastrar tabelas no banco de dados de acordo com o schema prisma
-npx prisma migrate dev
+$ npx prisma migrate dev
 ```
 
 ## Rodando a API
