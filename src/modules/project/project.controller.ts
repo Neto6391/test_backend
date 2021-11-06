@@ -2,6 +2,8 @@ import { Body, Controller, Post, UseGuards, Request, Put, Param, Delete, Get } f
 import { DoesUserDeletedGuard } from 'src/core/guards/does-user-deleted.guard';
 import { DoesUserEditOrDeleteProjectGuard } from 'src/core/guards/does-user-edit-or-delete-project.guard';
 import { JwtAuthGuard } from 'src/core/guards/jwt-auth.guard';
+import { CreateGuestUserProject } from '../guest-user-project/dto';
+import { GuestUserProjectService } from '../guest-user-project/guest-user-project.service';
 import { CreateProjectDto } from './dto';
 
 import { ProjectService } from './project.service';
@@ -11,7 +13,8 @@ import { ProjectService } from './project.service';
 export class ProjectController {
 
     constructor(
-        private readonly projectService: ProjectService
+        private readonly projectService: ProjectService,
+        private readonly guestUserProjectService: GuestUserProjectService
     ) {}
 
     @UseGuards(JwtAuthGuard,
@@ -49,5 +52,27 @@ export class ProjectController {
     @Delete(":id")
     async deleteProject(@Param("id") projectId: string) {
         return await this.projectService.softDelete(parseInt(projectId));
+    }
+
+    @UseGuards(JwtAuthGuard,
+        DoesUserDeletedGuard)
+    @Post("guest-project")
+    async createUserGuestProject(@Body() createGuestUserProject: CreateGuestUserProject) {
+        return this.guestUserProjectService.create(createGuestUserProject);
+    }
+
+    @UseGuards(JwtAuthGuard,
+        DoesUserDeletedGuard)
+    @Put("guest-project/:id")
+    async updateUserGuestProject(@Param("id") idUserGuestProject: string,  @Body() createGuestUserProject: CreateGuestUserProject) {
+        return await this.guestUserProjectService.update(createGuestUserProject, parseInt(idUserGuestProject));
+    }
+
+
+    @UseGuards(JwtAuthGuard,
+        DoesUserDeletedGuard)
+    @Delete("guest-project/:id")
+    async removeUserGuestProject(@Param("id") idUserGuestProject: string, @Body() createGuestUserProject: CreateGuestUserProject) {
+        return this.guestUserProjectService.remove(parseInt(idUserGuestProject));
     }
 }
