@@ -1,5 +1,5 @@
 import { Project } from '.prisma/client';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/core/prisma/prisma.service';
 import { ProjectDto } from './dto';
 
@@ -20,6 +20,13 @@ export class ProjectService {
 
     async readById(projectId: number, deleted: boolean): Promise<{project: Project}> {
         let project: Project;
+        const projectExist: Project = await this.prismaService.project.findFirst({ where: { id: projectId  } });
+
+        if (!projectExist) {
+            return null;
+        }
+            
+
         if (deleted) {
             project = await this.prismaService.project.findFirst({ where: { id: projectId, isDeleted: deleted } });
         } else {
@@ -29,16 +36,25 @@ export class ProjectService {
         return { project };
     }
 
+    async isAuthor(userId: number): Promise<boolean> {  
+        const projectExist: Project = await this.prismaService.project.findFirst({ where: { userId } })
+        return projectExist ? true : false;
+    }
+
     async readAll(): Promise<{project: Project[]}> {
         const project: Project[] = await this.prismaService.project.findMany({where: {isDeleted: false}});
         return { project };
     }
 
     async softDelete(projectId: number): Promise<any> {
-        const foundProject: Project = await this.prismaService.project.findUnique({where: { id: projectId }});
+        const foundProject: Project = await this.prismaService.project.findFirst({where: { id: projectId }});
+
         if (foundProject && foundProject.isDeleted) {
+            await this.prismaService.document.deleteMany({ where: { projectId  } });
+            await this.prismaService.guestUserProject.deleteMany({ where: { projectId } });
             return await this.prismaService.project.delete({ where: { id: projectId }});
         }
+        await this.prismaService.document.updateMany({ data: { isDeleted: true }, where: { projectId  } });
         return await this.prismaService.project.update({where: { id: projectId }, data: { isDeleted: true }});
     }
 
