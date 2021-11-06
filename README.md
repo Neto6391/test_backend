@@ -4,6 +4,7 @@ Respositorio responsavel para o teste de backend da empresa [WEEDO it](http://we
 
 Tecnologias Utilizadas:
 - Framework NestJS
+- Prisma
 - Typescript
 - Docker
 - MySQL
