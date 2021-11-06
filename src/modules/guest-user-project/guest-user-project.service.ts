@@ -39,6 +39,13 @@ export class GuestUserProjectService {
     async update(guestUserProjectData: CreateGuestUserProject, guestId: number): Promise<GuestUserProject> {
         const { userId, projectId } = guestUserProjectData;
 
+        
+        const guestProjectExist: GuestUserProject = await this.prismaService.guestUserProject.findFirst({ where: { id: guestId } });
+
+        if (!guestProjectExist) {
+            throw new NotFoundException("Registro de Convidado nao existe");
+        }
+
         const userExist: User = await this.prismaService.user.findFirst({ where: { id: userId } });
         const projectExist: Project = await this.prismaService.project.findFirst({ where: { id: projectId } });
 
