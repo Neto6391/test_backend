@@ -42,6 +42,7 @@ docker exec -it mysql-db /bin/bash
  123
 
 # verificar se as variaveis de ambiente estao preenchidas corretamente
+renomear o arquivo '.example.env' para '.env'
 
 # cadastrar tabelas no banco de dados de acordo com o schema prisma
 npx prisma migrate dev
