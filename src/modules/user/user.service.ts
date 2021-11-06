@@ -1,4 +1,4 @@
-import { User } from '.prisma/client';
+import { Project, User } from '.prisma/client';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/core/prisma/prisma.service';
@@ -59,9 +59,29 @@ export class UserService {
 
     async softDelete(userId: number): Promise<User> {
         const foundUser: User = await this.prismaService.user.findUnique({where: { id: userId }});
+        const foundProjects: Project[] = await this.prismaService.project.findMany({ where: { userId } });
         if (foundUser && foundUser.isDeleted) {
+            if (foundProjects) {
+                for(const project of foundProjects) {
+                    const projectId: number = project.id;
+                    await this.prismaService.document.deleteMany({ where: { projectId: projectId }});
+                    await this.prismaService.guestUserProject.deleteMany({ where: { projectId } });
+                    await this.prismaService.project.delete({ where: { id: projectId } });
+                }
+            }
+           
+            await this.prismaService.guestUserProject.deleteMany({ where: { userId } });
             return await this.prismaService.user.delete({ where: { id: userId }});
         }
+
+        if (foundProjects) {
+            for(const project of foundProjects) {
+                const projectId: number = project.id;
+                await this.prismaService.document.updateMany({ where: { projectId: projectId }, data: { isDeleted: true } });
+                await this.prismaService.project.update({ where: { id: projectId }, data: { isDeleted: true }});
+            }
+        }
+
         return await this.prismaService.user.update({where: { id: userId }, data: { isDeleted: true }});
     }
 
