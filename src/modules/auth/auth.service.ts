@@ -13,7 +13,6 @@ export class AuthService {
 
     async validateUser(login: string, pass: string) {
         const user = await this.userService.readByLogin(login);
-        console.log("teste ", user);
         if (!user) {
             throw new Error("Usuario nao existe");
         }

@@ -11,7 +11,6 @@ export class DoesUserFoundGuard implements CanActivate {
   }
 
   async validateRequest(request) {
-    console.log("request-->", request.user, " params ", request.params.id);
     if (request.user) {
         if (request.user.id === parseInt(request.params.id)) {
           return true;

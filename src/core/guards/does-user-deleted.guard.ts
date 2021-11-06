@@ -11,7 +11,6 @@ export class DoesUserDeletedGuard implements CanActivate {
   }
 
   async validateRequest(request) {
-    console.log("request", request.user, " params ", request.params.id);
     if (request.user) {
       if (!request.user.isDeleted) {
         return true;

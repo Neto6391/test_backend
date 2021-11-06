@@ -1,6 +1,6 @@
 import { GuestUserProject, Project, User } from '.prisma/client';
 import { ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { Console } from 'console';
+
 import { PrismaService } from 'src/core/prisma/prisma.service';
 import { CreateGuestUserProject } from './dto';
 
@@ -28,7 +28,6 @@ export class GuestUserProjectService {
         if (!projectAuthor) {
             const guestUserProject: GuestUserProject = await this.prismaService.guestUserProject.findFirst({ where: { projectId, userId } });
             if (!guestUserProject) {
-                console.log(guestUserProject);
                 return await this.prismaService.guestUserProject.create({ data: {...guestUserProjectData} });
             }
             throw new ForbiddenException("Usuario Ja convidado!");
