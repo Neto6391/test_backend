@@ -26,6 +26,15 @@ $ yarn install
 # Requer docker instalado(criar container do banco de dados MySQL)
 docker run -p 3306:3306 --name mysql-db -e MYSQL_ROOT_PASSWORD=123 -e MYSQL_DATABASE=test_backend -d mysql:8.0
 
+# caso queira navegar dentro do container do banco de dados
+docker exec -it mysql-db /bin/bash
+
+# dentro do container executar para executar o servico do MySQL
+ mysql -u root -p
+ 
+ # senha para entrar no MySQL
+ 123
+
 # verificar se as variaveis de ambiente estao preenchidas corretamente
 
 # cadastrar tabelas no banco de dados de acordo com o schema prisma
