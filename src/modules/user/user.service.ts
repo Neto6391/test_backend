@@ -1,5 +1,5 @@
 import { Project, User } from '.prisma/client';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/core/prisma/prisma.service';
 import { AuthService } from '../auth/auth.service';
@@ -14,7 +14,10 @@ export class UserService {
 
     async create(user: CreateUserDto): Promise<any> {
         const passwordHashed = await this.hashPassword(user.senha);
-        
+        const userFound: User = await this.prismaService.user.findFirst({ where: { login: user.login,  } });
+        if (userFound) {
+            throw new ConflictException("Usuario ja existe");
+        }
         const createdUser: User = await this.prismaService.user.create({ data: Object.assign({}, {...user}, {senha: passwordHashed}) });
         const token = await this.authService.generateToken(createdUser);
         return { user: createdUser, token };
