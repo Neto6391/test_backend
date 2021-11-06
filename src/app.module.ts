@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+
 import { PrismaService } from './core/prisma/prisma.service';
 import { PrismaModule } from './core/prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
@@ -17,7 +16,7 @@ import { GuestUserProjectModule } from './modules/guest-user-project/guest-user-
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule, UserModule, AuthModule, ProjectModule, DocumentModule, GuestUserProjectModule],
-  controllers: [AppController, DocumentController],
-  providers: [AppService, PrismaService, ProjectService, DocumentService],
+  controllers: [DocumentController],
+  providers: [PrismaService, ProjectService, DocumentService],
 })
 export class AppModule {}
