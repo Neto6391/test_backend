@@ -2,6 +2,12 @@
 
 Respositorio responsavel para o teste de backend da empresa [WEEDO it](http://weedo.it/)
 
+Tecnologias Utilizadas:
+- Framework NestJS
+- Typescript
+- Docker
+- MySQL
+
 Objetivo:
 
 - Os usuários devem fazer login para ter acesso ao sistema;
