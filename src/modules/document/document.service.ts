@@ -21,9 +21,14 @@ export class DocumentService {
 
     async update(createDocument: DocumentDto, documentId: number): Promise<{ document: Document }> {
         const projectExist = await this.prismaService.project.findFirst({where: { id: createDocument.projectId, isDeleted: false }});
+        const documentExist = await this.prismaService.document.findFirst({ where: { id: documentId, isDeleted: false } });
         if (!projectExist) {
             throw new NotFoundException("Projeto nao existe");
         }
+        if (!documentExist) {
+            throw new NotFoundException("Documento nao existe");
+        }
+
         return {
             document: await this.prismaService.document.update({ data: {...createDocument}, where: { id: documentId } }),
         };
