@@ -29,6 +29,11 @@ export class ProjectService {
         return { project };
     }
 
+    async isAuthor(userId: number): Promise<boolean> {  
+        const projectExist: Project = await this.prismaService.project.findFirst({ where: { userId } })
+        return projectExist ? true : false;
+    }
+
     async readAll(): Promise<{project: Project[]}> {
         const project: Project[] = await this.prismaService.project.findMany({where: {isDeleted: false}});
         return { project };
